@@ -208,3 +208,19 @@ button, a, .glassBtn {
   user-select: none;
   -webkit-touch-callout: none;
 }
+
+/* --- app should not be text-selectable (prevents long-press copy/highlight) --- */
+.appGlassBg, .appGlassBg *{
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+input, textarea{
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Helps mobile taps feel crisp (no weird delays) */
+button, a{
+  touch-action: manipulation;
+}

@@ -1,27 +1,29 @@
 :root{
-  /* Clear liquid glass: brighter + clearer */
-  --glass-bg: rgba(255,255,255,.10);
-  --glass-bg-2: rgba(255,255,255,.07);
-  --glass-border: rgba(255,255,255,.18);
-  --glass-border-strong: rgba(255,255,255,.26);
-  --glass-shadow: 0 10px 22px rgba(0,0,0,.18);
-  --glass-inner: inset 0 1px 0 rgba(255,255,255,.20);
+  /* iOS-ish white glass */
+  --text: rgba(18,18,22,.92);
+  --muted: rgba(18,18,22,.62);
+  --muted2: rgba(18,18,22,.45);
 
-  --text: rgba(255,255,255,.94);
-  --muted: rgba(255,255,255,.66);
-  --muted2: rgba(255,255,255,.48);
+  --glass-bg: rgba(255,255,255,.55);
+  --glass-bg-2: rgba(255,255,255,.42);
+  --glass-border: rgba(0,0,0,.08);
+  --glass-border-strong: rgba(0,0,0,.12);
+  --glass-shadow: 0 14px 40px rgba(0,0,0,.10);
+  --glass-inner: inset 0 1px 0 rgba(255,255,255,.75);
 
   --danger: rgba(239,68,68,.95);
+
+  /* iOS system blue */
+  --accent: #0A84FF;
 }
 
-/* Brighter, modern liquid background */
+/* Bright modern iOS-like background (no purple) */
 .appGlassBg{
   min-height: 100dvh;
   background:
-    radial-gradient(1100px 650px at 15% 0%, rgba(140,200,255,.30), transparent 58%),
-    radial-gradient(950px 650px at 90% 10%, rgba(255,170,220,.24), transparent 60%),
-    radial-gradient(900px 700px at 50% 110%, rgba(160,255,220,.18), transparent 62%),
-    linear-gradient(180deg, #0b0b16, #101022 55%, #0b0b18);
+    radial-gradient(900px 520px at 18% 0%, rgba(10,132,255,.12), transparent 60%),
+    radial-gradient(900px 520px at 82% 6%, rgba(255,255,255,.70), transparent 60%),
+    linear-gradient(180deg, #f6f7fb, #eef1f8 55%, #f4f6fb);
   color: var(--text);
 }
 
@@ -33,7 +35,7 @@
   border-radius: 26px;
 }
 
-/* “Liquid” specular highlights */
+/* Liquid highlights */
 .glassGloss{
   position: relative;
   overflow: hidden;
@@ -41,29 +43,29 @@
 .glassGloss::before{
   content:"";
   position:absolute;
-  inset:-45% -35% auto -45%;
-  height: 130%;
-  background: radial-gradient(closest-side, rgba(255,255,255,.30), transparent 70%);
+  inset:-40% -30% auto -40%;
+  height: 125%;
+  background: radial-gradient(closest-side, rgba(255,255,255,.90), transparent 70%);
   transform: rotate(12deg);
   pointer-events:none;
-  opacity:.65;
+  opacity:.35;
 }
 .glassGloss::after{
   content:"";
   position:absolute;
   inset:0;
   background:
-    radial-gradient(760px 260px at 30% 18%, rgba(255,255,255,.14), transparent 62%),
-    linear-gradient(115deg, transparent 35%, rgba(255,255,255,.10) 46%, transparent 60%);
+    radial-gradient(760px 240px at 30% 18%, rgba(255,255,255,.55), transparent 64%),
+    linear-gradient(115deg, transparent 35%, rgba(255,255,255,.35) 46%, transparent 60%);
   pointer-events:none;
-  opacity:.9;
+  opacity:.55;
 }
 
 /* Blur when supported */
 @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
   .glass{
-    -webkit-backdrop-filter: blur(30px) saturate(1.6);
-    backdrop-filter: blur(30px) saturate(1.6);
+    -webkit-backdrop-filter: blur(28px) saturate(1.45);
+    backdrop-filter: blur(28px) saturate(1.45);
   }
 }
 
@@ -72,31 +74,30 @@
   width: 100%;
   padding: 18px 16px;
   border-radius: 24px;
-  border: 1px solid var(--glass-border);
-  background: rgba(255,255,255,.12);
+  border: 1px solid var(--glass-border-strong);
+  background: rgba(255,255,255,.62);
   color: var(--text);
   font-weight: 900;
   font-size: 18px;
   letter-spacing: -0.2px;
-  box-shadow: 0 8px 14px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.18);
+  box-shadow: 0 10px 26px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.75);
   transition: transform 120ms ease, filter 120ms ease, background 160ms ease, border-color 160ms ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 .glassBtn:active{
   transform: scale(.985);
-  filter: brightness(1.06);
+  filter: brightness(1.02);
 }
 .glassBtnSmall{
-  padding: 14px 12px;
+  padding: 13px 12px;
   border-radius: 20px;
   font-size: 16px;
   font-weight: 900;
 }
 .glassBtnPrimary{
-  background: rgba(255,255,255,.95);
-  color: rgba(0,0,0,.92);
-  border-color: rgba(255,255,255,.70);
+  background: rgba(10,132,255,.14);
+  border-color: rgba(10,132,255,.22);
 }
 .glassBtnDanger{
   background: rgba(239,68,68,.92);
@@ -104,17 +105,16 @@
   color: white;
 }
 .glassBtnOn{
-  background: rgba(239,68,68,.18);
-  border-color: rgba(239,68,68,.35);
-  color: #fecaca;
+  background: rgba(239,68,68,.14);
+  border-color: rgba(239,68,68,.22);
 }
 
 /* Panels + sliders */
 .glassPanel{
   padding: 14px;
   border-radius: 22px;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(0,0,0,.08);
+  background: rgba(255,255,255,.48);
 }
 .glassRow{
   display:flex;
@@ -129,14 +129,14 @@
 .glassRange{
   width: 100%;
   margin-top: 10px;
-  accent-color: rgba(255,255,255,.95);
+  accent-color: var(--accent);
 }
 
 /* Modal */
 .modalBackdrop{
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.42);
+  background: rgba(0,0,0,.20);
   display: grid;
   place-items: center;
   padding: 18px 14px;
@@ -145,19 +145,13 @@
 .modalCard{
   width: min(520px, 100%);
   border-radius: 26px;
-  border: 1px solid rgba(255,255,255,.18);
-  background: rgba(255,255,255,.09);
-  box-shadow: 0 18px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.18);
+  border: 1px solid rgba(0,0,0,.10);
+  background: rgba(255,255,255,.60);
+  box-shadow: 0 18px 60px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.85);
 }
 @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
   .modalCard{
-    -webkit-backdrop-filter: blur(34px) saturate(1.6);
-    backdrop-filter: blur(34px) saturate(1.6);
+    -webkit-backdrop-filter: blur(32px) saturate(1.45);
+    backdrop-filter: blur(32px) saturate(1.45);
   }
-}
-
-/* Motion safety */
-@media (prefers-reduced-motion: reduce) {
-  .glassBtn{ transition: none; }
-  .glassBtn:active{ transform:none; }
 }
