@@ -4,5 +4,40 @@
 }
 
 .center{ text-align: center; }
-
 .stack{ display: grid; gap: 10px; }
+
+.grid3{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+.grid2{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* keypad */
+.keypadDisplay{
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.18);
+  font-size: 34px;
+  font-weight: 900;
+  letter-spacing: -0.6px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.keypadGrid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 14px;
+}
+.keypadActions{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0 14px 14px;
+}

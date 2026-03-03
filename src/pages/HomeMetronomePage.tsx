@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ensureAudioRunning } from '@/audio/audioContext';
 import { MetronomeEngine } from '@/audio/metronomeEngine';
@@ -6,12 +6,17 @@ import { useAppStore } from '@/state/useAppStore';
 import { requestWakeLock, releaseWakeLock } from '@/utils/wakeLock';
 import './home.css';
 
+function clamp(n: number, a: number, b: number) {
+  return Math.max(a, Math.min(b, n));
+}
+
 export default function HomeMetronomePage() {
   const bpm = useAppStore((s) => s.bpm);
   const status = useAppStore((s) => s.status);
   const volume = useAppStore((s) => s.volume);
   const keepAwakeDefault = useAppStore((s) => s.keepAwakeDefault);
   const recordArmed = useAppStore((s) => s.recordArmed);
+  const timeSigTop = useAppStore((s) => s.timeSigTop);
 
   const setStatus = useAppStore((s) => s.setStatus);
   const setVolume = useAppStore((s) => s.setVolume);
@@ -23,9 +28,14 @@ export default function HomeMetronomePage() {
 
   const engineRef = useRef<MetronomeEngine | null>(null);
 
+  // Hold accel for ▲/▼
   const holdTimerRef = useRef<number | null>(null);
   const holdStartRef = useRef<number>(0);
   const holdDirRef = useRef<1 | -1>(1);
+
+  // Keypad modal
+  const [keypadOpen, setKeypadOpen] = useState(false);
+  const [keypadValue, setKeypadValue] = useState<string>('');
 
   const bpmDisplay = useMemo(() => String(bpm.toFixed(1)).replace(/\.0$/, ''), [bpm]);
 
@@ -49,7 +59,9 @@ export default function HomeMetronomePage() {
     const ac = await ensureAudioRunning();
 
     if (!engineRef.current) {
-      engineRef.current = new MetronomeEngine(ac, { bpm, volume, accentEvery: 4 });
+      // NOTE: We already wire time signature into “accent every N beats”.
+      // Subdivision/swing/polyrhythm wiring comes in Phase 2 engine work.
+      engineRef.current = new MetronomeEngine(ac, { bpm, volume, accentEvery: clamp(timeSigTop, 1, 32) });
     }
 
     engineRef.current.setBpm(bpm);
@@ -84,16 +96,19 @@ export default function HomeMetronomePage() {
 
       const tick = () => {
         const t = performance.now() - holdStartRef.current;
-        // Tap = 0.5 BPM, hold accelerates to 5 BPM
+        // Gear shifting for speed:
+        // tap = 0.5 BPM, hold ramps to 20 BPM
         let step = 0.5;
-        if (t > 1400) step = 5;
-        else if (t > 900) step = 2;
-        else if (t > 450) step = 1;
+        if (t > 2400) step = 20;
+        else if (t > 1800) step = 10;
+        else if (t > 1000) step = 5;
+        else if (t > 600) step = 2;
+        else if (t > 300) step = 1;
         nudgeBpm(holdDirRef.current * step);
       };
 
       tick();
-      holdTimerRef.current = window.setInterval(tick, 120);
+      holdTimerRef.current = window.setInterval(tick, 110);
     };
   }
 
@@ -104,20 +119,71 @@ export default function HomeMetronomePage() {
     }
   }
 
+  function jump(delta: number) {
+    nudgeBpm(delta);
+  }
+
+  function openKeypad() {
+    setKeypadValue(bpm.toFixed(1).replace(/\.0$/, ''));
+    setKeypadOpen(true);
+  }
+
+  function appendDigit(d: string) {
+    setKeypadValue((v) => {
+      // avoid leading zeros like "000"
+      if (v === '0') return d;
+      if (v.length >= 6) return v;
+      return v + d;
+    });
+  }
+
+  function appendDot() {
+    setKeypadValue((v) => {
+      if (v.includes('.')) return v;
+      if (v.length === 0) return '0.';
+      return v + '.';
+    });
+  }
+
+  function backspace() {
+    setKeypadValue((v) => v.slice(0, -1));
+  }
+
+  function clearAll() {
+    setKeypadValue('');
+  }
+
+  function setFromKeypad() {
+    const num = Number.parseFloat(keypadValue);
+    if (!Number.isFinite(num)) return;
+    const clamped = clamp(num, 20, 300);
+    setBpm(clamped);
+    setKeypadOpen(false);
+  }
+
   return (
     <div className="homeScroll">
       {/* Nothing above the BPM block */}
       <div className="glass glassGloss center" style={{ padding: 18, borderRadius: 28 }}>
         <div className="glassLabel">BPM</div>
-        <div style={{ marginTop: 6, fontSize: 90, fontWeight: 900, letterSpacing: -2, lineHeight: 0.95, fontVariantNumeric: 'tabular-nums' as any }}>
+        <div
+          style={{
+            marginTop: 6,
+            fontSize: 90,
+            fontWeight: 900,
+            letterSpacing: -2,
+            lineHeight: 0.95,
+            fontVariantNumeric: 'tabular-nums' as any,
+          }}
+        >
           {bpmDisplay}
         </div>
         <div style={{ marginTop: 10 }} className="glassLabel">
-          No swipe controls. Use ▲/▼ (tap or hold) • 0.5 BPM precision • Tap Tempo
+          ▲/▼ tap or hold to fly through tempos • Jump buttons • Keypad exact entry
         </div>
       </div>
 
-      {/* Start/Stop: full width */}
+      {/* Start/Stop full width */}
       {status === 'running' ? (
         <button className="glassBtn glassBtnDanger" onClick={() => void stop()}>
           Stop
@@ -128,12 +194,12 @@ export default function HomeMetronomePage() {
         </button>
       )}
 
-      {/* Record: directly below Start */}
+      {/* Record directly under Start */}
       <button className={'glassBtn ' + (recordArmed ? 'glassBtnOn' : '')} onClick={() => setRecordArmed(!recordArmed)} aria-pressed={recordArmed}>
         {recordArmed ? '● Recording Armed' : 'Record (arm)'}
       </button>
 
-      {/* Tempo controls: vertical buttons only */}
+      {/* Vertical tempo controls (no swipe-page navigation) */}
       <div className="stack">
         <button className="glassBtn" onPointerDown={startHold(+1)} onPointerUp={stopHold} onPointerCancel={stopHold} onPointerLeave={stopHold}>
           ▲ Tempo Up
@@ -148,7 +214,33 @@ export default function HomeMetronomePage() {
         </button>
       </div>
 
-      {/* Volume: horizontal bar (allowed) */}
+      {/* Jump panel (B) + keypad */}
+      <div className="glass glassPanel">
+        <div className="glassRow">
+          <div className="glassLabel">Jump</div>
+          <button className="glassPill glassBtnSmall" style={{ width: 'auto', padding: '10px 12px' }} onClick={openKeypad}>
+            Set BPM (Keypad)
+          </button>
+        </div>
+
+        <div style={{ height: 10 }} />
+
+        <div className="grid3">
+          <button className="glassBtn glassBtnSmall" onClick={() => jump(-50)}>-50</button>
+          <button className="glassBtn glassBtnSmall" onClick={() => jump(-25)}>-25</button>
+          <button className="glassBtn glassBtnSmall" onClick={() => jump(-10)}>-10</button>
+        </div>
+
+        <div style={{ height: 10 }} />
+
+        <div className="grid3">
+          <button className="glassBtn glassBtnSmall" onClick={() => jump(+10)}>+10</button>
+          <button className="glassBtn glassBtnSmall" onClick={() => jump(+25)}>+25</button>
+          <button className="glassBtn glassBtnSmall" onClick={() => jump(+50)}>+50</button>
+        </div>
+      </div>
+
+      {/* Volume slider (horizontal bars OK) */}
       <div className="glass glassPanel">
         <div className="glassRow">
           <div className="glassLabel">Volume</div>
@@ -157,7 +249,7 @@ export default function HomeMetronomePage() {
         <input className="glassRange" type="range" min={0} max={1} step={0.01} value={volume} onChange={(e) => setVolume(Number(e.target.value))} />
       </div>
 
-      {/* Scroll down: Projects + Settings at bottom */}
+      {/* Bottom navigation */}
       <div className="stack" style={{ marginTop: 4 }}>
         <Link className="glassBtn" to="/projects">
           Projects
@@ -166,6 +258,47 @@ export default function HomeMetronomePage() {
           Settings
         </Link>
       </div>
+
+      {/* Keypad modal */}
+      {keypadOpen && (
+        <div className="modalBackdrop" onClick={() => setKeypadOpen(false)}>
+          <div className="modalCard glassGloss" onClick={(e) => e.stopPropagation()}>
+            <div style={{ padding: 14 }}>
+              <div className="glassRow">
+                <div className="glassLabel">Set BPM</div>
+                <button className="glassBtn glassBtnSmall" style={{ width: 'auto', padding: '10px 12px' }} onClick={() => setKeypadOpen(false)}>
+                  Close
+                </button>
+              </div>
+            </div>
+
+            <div style={{ padding: 0, marginTop: 0 }}>
+              <div style={{ padding: 14 }}>
+                <div className="keypadDisplay">{keypadValue.length ? keypadValue : '—'}</div>
+                <div className="glassLabel" style={{ marginTop: 10, textAlign: 'center' }}>
+                  Range 20–300 • 0.5 precision
+                </div>
+              </div>
+
+              <div className="keypadGrid">
+                {['1','2','3','4','5','6','7','8','9'].map((d) => (
+                  <button key={d} className="glassBtn glassBtnSmall" onClick={() => appendDigit(d)}>
+                    {d}
+                  </button>
+                ))}
+                <button className="glassBtn glassBtnSmall" onClick={appendDot}>.</button>
+                <button className="glassBtn glassBtnSmall" onClick={() => appendDigit('0')}>0</button>
+                <button className="glassBtn glassBtnSmall" onClick={backspace}>⌫</button>
+              </div>
+
+              <div className="keypadActions">
+                <button className="glassBtn glassBtnSmall" onClick={clearAll}>Clear</button>
+                <button className="glassBtn glassBtnSmall glassBtnPrimary" onClick={setFromKeypad}>Set</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
