@@ -1,3 +1,5 @@
+@import "./styles/glass.css";
+
 :root {
   color-scheme: dark;
   --bg: #0f0f10;
@@ -187,4 +189,15 @@ a { color: inherit; text-decoration: none; }
   .container { padding: 12px; }
   .big { font-size: 78px; }
   .btn { border-radius: 18px; }
+}
+
+/* --- baseline layout helpers --- */
+html, body, #root { height: 100%; }
+body { margin: 0; }
+a { color: inherit; text-decoration: none; }
+
+.container{
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 16px 14px 40px;
 }
