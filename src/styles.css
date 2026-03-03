@@ -138,3 +138,53 @@ a { color: inherit; text-decoration: none; }
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.04);
 }
+
+/* --- Mobile-first Home layout helpers (Phase 1 UI upgrade) --- */
+.home { width: 100%; }
+.homeStack { max-width: 560px; margin: 0 auto; padding: 12px 14px 28px; }
+.homeHeader { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 6px 0 12px; }
+.homeTitle { font-size: 22px; font-weight: 800; letter-spacing: -0.2px; }
+.homeHeaderRight { display: flex; gap: 10px; align-items: center; }
+.pillBtn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 12px; border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  color: var(--text); font-weight: 700;
+}
+.pillOn {
+  background: rgba(255,92,92,0.15);
+  border-color: rgba(255,92,92,0.35);
+}
+.homeCard { border-radius: 22px; padding: 14px; }
+
+.bpmBox {
+  border-radius: 26px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(0,0,0,0.22);
+  padding: 18px 16px;
+  text-align: center;
+}
+.bpmPulse { outline: 2px solid rgba(98, 208, 255, 0.35); }
+.bpmLabel { font-size: 12px; color: var(--muted); letter-spacing: 0.3px; }
+.bpmValue { font-size: 86px; font-weight: 900; line-height: 0.95; letter-spacing: -2px; font-variant-numeric: tabular-nums; }
+.bpmHint { margin-top: 10px; font-size: 12px; color: rgba(255,255,255,0.48); }
+
+.tempoSlider { margin-top: 14px; padding: 12px; border-radius: 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); }
+.tempoSliderMeta { margin-top: 8px; display: flex; justify-content: space-between; font-size: 12px; }
+.range { width: 100%; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 12px; }
+.btnWide { width: 100%; }
+.btnBig { padding: 16px 14px; border-radius: 22px; font-size: 18px; font-weight: 800; }
+
+.ctaStack { margin-top: 14px; display: grid; gap: 12px; }
+.tiny { font-size: 12px; }
+
+/* Make default cards/buttons feel better on small screens without breaking desktop */
+@media (max-width: 520px) {
+  .container { padding: 12px; }
+  .big { font-size: 78px; }
+  .btn { border-radius: 18px; }
+}
