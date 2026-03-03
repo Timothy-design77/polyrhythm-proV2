@@ -201,3 +201,10 @@ a { color: inherit; text-decoration: none; }
   margin: 0 auto;
   padding: 16px 14px 40px;
 }
+
+/* --- prevent accidental text selection on controls --- */
+button, a, .glassBtn {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
