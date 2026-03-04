@@ -1,130 +1,122 @@
 :root{
-  /* Stronger text contrast (dark iOS light-mode) */
-  --text: rgba(10,10,12,.95);
-  --muted: rgba(10,10,12,.68);
-  --muted2: rgba(10,10,12,.52);
+  --bg: #f2f3f5;          /* light gray background */
+  --card: #ffffff;        /* white surfaces */
+  --border: #d7dbe0;      /* clean border */
+  --border2: #cbd2d9;     /* stronger border */
+  --text: #111317;        /* high contrast text */
+  --muted: #4b5563;       /* readable muted */
+  --muted2: #6b7280;
 
-  --accent: #0A84FF;
-  --danger: rgba(239,68,68,.95);
+  --primary: #2563eb;     /* modern blue */
+  --danger: #dc2626;      /* modern red */
 
-  /* Clear glass */
-  --glass-a: .10;
-  --glass-a-2: .06;
-
-  --shadow: 0 16px 45px rgba(0,0,0,.10);
-  --inner: inset 0 1px 0 rgba(255,255,255,.65);
+  --shadow: 0 10px 24px rgba(0,0,0,.08);
 }
 
-/* Neutral iOS light background */
 .appGlassBg{
   min-height: 100dvh;
-  background:
-    radial-gradient(1100px 700px at 15% 0%, rgba(10,132,255,.14), transparent 62%),
-    radial-gradient(1000px 650px at 85% 10%, rgba(255,45,85,.06), transparent 64%),
-    radial-gradient(900px 650px at 50% 110%, rgba(52,199,89,.06), transparent 66%),
-    linear-gradient(180deg, #f7f8fc, #eef2f8 55%, #f6f8fc);
+  background: var(--bg);
   color: var(--text);
 }
 
-/* TRUE glass surface */
+/* “Glass” classes now become clean cards */
 .glass{
-  background: rgba(255,255,255,var(--glass-a));
-  border: 1px solid rgba(255,255,255,.45);
-  box-shadow: var(--shadow), var(--inner);
-  border-radius: 26px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  border-radius: 18px;
   color: var(--text);
-  text-shadow: 0 1px 0 rgba(255,255,255,.55);
 }
 
-/* Subtle liquid highlight */
+/* Keep class but remove glossy effects */
 .glassGloss{
   position: relative;
   overflow: hidden;
 }
-.glassGloss::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(700px 240px at 30% 18%, rgba(255,255,255,.32), transparent 66%),
-    linear-gradient(115deg, transparent 35%, rgba(255,255,255,.16) 46%, transparent 60%);
-  pointer-events:none;
-  opacity:.35;
-}
 
-@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  .glass{
-    -webkit-backdrop-filter: blur(42px) saturate(1.55);
-    backdrop-filter: blur(42px) saturate(1.55);
-  }
-}
-
-/* Buttons = glass, but force readable text */
+/* Buttons */
 .glassBtn{
   width: 100%;
-  padding: 18px 16px;
-  border-radius: 24px;
-  border: 1px solid rgba(255,255,255,.45);
-  background: rgba(255,255,255,var(--glass-a));
+  padding: 16px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--border2);
+  background: var(--card);
   color: var(--text);
-  font-weight: 900;
+  font-weight: 800;
   font-size: 18px;
-  letter-spacing: -0.2px;
-  box-shadow: 0 10px 28px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.60);
-  transition: transform 120ms ease, filter 120ms ease;
+  letter-spacing: -0.1px;
+  box-shadow: 0 6px 14px rgba(0,0,0,.06);
+  transition: transform 90ms ease, filter 90ms ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  text-shadow: 0 1px 0 rgba(255,255,255,.55);
 }
-.glassBtn:active{ transform: scale(.985); filter: brightness(1.02); }
+.glassBtn:active{
+  transform: scale(.99);
+  filter: brightness(0.98);
+}
 
 .glassBtnSmall{
-  padding: 13px 12px;
-  border-radius: 20px;
+  padding: 12px 12px;
+  border-radius: 14px;
   font-size: 16px;
-  font-weight: 900;
+  font-weight: 800;
 }
 
-/* Primary still iOS-blue but readable */
+/* Primary */
 .glassBtnPrimary{
-  background: rgba(10,132,255,.16);
-  border-color: rgba(10,132,255,.22);
-  color: var(--text);
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
 }
 
-/* Danger stays white text */
+/* Danger */
 .glassBtnDanger{
-  background: rgba(239,68,68,.92);
-  border-color: rgba(239,68,68,.92);
-  color: white;
-  text-shadow: 0 1px 0 rgba(0,0,0,.18);
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #ffffff;
 }
 
-/* Armed */
+/* “On/armed” state: subtle tinted background, still readable */
 .glassBtnOn{
-  background: rgba(239,68,68,.12);
-  border-color: rgba(239,68,68,.18);
-  color: var(--text);
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #7f1d1d;
 }
 
 /* Panels */
 .glassPanel{
   padding: 14px;
-  border-radius: 22px;
-  border: 1px solid rgba(255,255,255,.45);
-  background: rgba(255,255,255,var(--glass-a-2));
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: var(--shadow);
   color: var(--text);
-  text-shadow: 0 1px 0 rgba(255,255,255,.55);
 }
-.glassRow{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
-.glassLabel{ font-size: 12px; color: var(--muted); text-shadow: none; }
-.glassRange{ width: 100%; margin-top: 10px; accent-color: var(--accent); }
+
+.glassRow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+}
+
+.glassLabel{
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Sliders */
+.glassRange{
+  width: 100%;
+  margin-top: 10px;
+  accent-color: var(--primary);
+}
 
 /* Modal */
 .modalBackdrop{
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.16);
+  background: rgba(0,0,0,.25);
   display: grid;
   place-items: center;
   padding: 18px 14px;
@@ -132,16 +124,9 @@
 }
 .modalCard{
   width: min(520px, 100%);
-  border-radius: 26px;
-  border: 1px solid rgba(255,255,255,.45);
-  background: rgba(255,255,255,.10);
-  box-shadow: 0 22px 70px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.65);
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  box-shadow: 0 24px 70px rgba(0,0,0,.22);
   color: var(--text);
-  text-shadow: 0 1px 0 rgba(255,255,255,.55);
-}
-@supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  .modalCard{
-    -webkit-backdrop-filter: blur(46px) saturate(1.55);
-    backdrop-filter: blur(46px) saturate(1.55);
-  }
 }
