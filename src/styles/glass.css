@@ -1,15 +1,17 @@
 :root{
+  /* High-contrast clean theme */
   --bg: #f2f3f5;          /* light gray background */
   --card: #ffffff;        /* white surfaces */
-  --border: #d7dbe0;      /* clean border */
-  --border2: #cbd2d9;     /* stronger border */
-  --text: #111317;        /* high contrast text */
-  --muted: #4b5563;       /* readable muted */
-  --muted2: #6b7280;
+  --border: #d1d5db;      /* clean border */
+  --border2: #c3cbd6;     /* slightly stronger border */
 
-  --primary: #2563eb;     /* modern blue */
-  --danger: #dc2626;      /* modern red */
+  /* KEY: darker text + darker muted text (no faint gray) */
+  --text: #0b0f14;        /* near-black */
+  --muted: #111827;       /* still dark */
+  --muted2: #1f2937;      /* secondary but readable */
 
+  --primary: #1d4ed8;     /* blue */
+  --danger: #b91c1c;      /* red */
   --shadow: 0 10px 24px rgba(0,0,0,.08);
 }
 
@@ -19,7 +21,7 @@
   color: var(--text);
 }
 
-/* “Glass” classes now become clean cards */
+/* “glass” classes now mean clean card surfaces */
 .glass{
   background: var(--card);
   border: 1px solid var(--border);
@@ -28,7 +30,6 @@
   color: var(--text);
 }
 
-/* Keep class but remove glossy effects */
 .glassGloss{
   position: relative;
   overflow: hidden;
@@ -42,7 +43,7 @@
   border: 1px solid var(--border2);
   background: var(--card);
   color: var(--text);
-  font-weight: 800;
+  font-weight: 850;
   font-size: 18px;
   letter-spacing: -0.1px;
   box-shadow: 0 6px 14px rgba(0,0,0,.06);
@@ -59,7 +60,7 @@
   padding: 12px 12px;
   border-radius: 14px;
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 850;
 }
 
 /* Primary */
@@ -76,7 +77,7 @@
   color: #ffffff;
 }
 
-/* “On/armed” state: subtle tinted background, still readable */
+/* Armed state */
 .glassBtnOn{
   background: #fee2e2;
   border-color: #fca5a5;
@@ -100,9 +101,11 @@
   gap: 10px;
 }
 
+/* IMPORTANT: labels are now DARK and readable */
 .glassLabel{
   font-size: 12px;
-  color: var(--muted);
+  color: var(--muted2);
+  font-weight: 700;
 }
 
 /* Sliders */
@@ -129,4 +132,14 @@
   background: var(--card);
   box-shadow: 0 24px 70px rgba(0,0,0,.22);
   color: var(--text);
+}
+
+/* Extra: if user has high-contrast setting enabled */
+@media (prefers-contrast: more) {
+  :root{
+    --border: #9aa4b2;
+    --border2: #7c8798;
+    --shadow: 0 0 0 rgba(0,0,0,0);
+  }
+  .glassLabel{ color: var(--muted); }
 }

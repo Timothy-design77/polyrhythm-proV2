@@ -224,3 +224,7 @@ input, textarea{
 button, a{
   touch-action: manipulation;
 }
+
+/* --- enforce readable typography globally --- */
+body { color: var(--text); background: var(--bg); }
+p, span, div { color: inherit; }
