@@ -1,30 +1,27 @@
 :root{
-  /* Dark text like iOS light mode */
-  --text: rgba(12,12,14,.92);
-  --muted: rgba(12,12,14,.62);
-  --muted2: rgba(12,12,14,.45);
+  /* Stronger text contrast (dark iOS light-mode) */
+  --text: rgba(10,10,12,.95);
+  --muted: rgba(10,10,12,.68);
+  --muted2: rgba(10,10,12,.52);
 
   --accent: #0A84FF;
   --danger: rgba(239,68,68,.95);
 
-  /* KEY: low opacity -> clear glass */
+  /* Clear glass */
   --glass-a: .10;
   --glass-a-2: .06;
-
-  --glass-border: rgba(255,255,255,.55);
-  --glass-border-dark: rgba(0,0,0,.10);
 
   --shadow: 0 16px 45px rgba(0,0,0,.10);
   --inner: inset 0 1px 0 rgba(255,255,255,.65);
 }
 
-/* Give the blur something to blur (subtle iOS wallpaper vibe, not purple) */
+/* Neutral iOS light background */
 .appGlassBg{
   min-height: 100dvh;
   background:
-    radial-gradient(1100px 700px at 15% 0%, rgba(10,132,255,.16), transparent 62%),
-    radial-gradient(1000px 650px at 85% 10%, rgba(255,45,85,.08), transparent 64%),
-    radial-gradient(900px 650px at 50% 110%, rgba(52,199,89,.08), transparent 66%),
+    radial-gradient(1100px 700px at 15% 0%, rgba(10,132,255,.14), transparent 62%),
+    radial-gradient(1000px 650px at 85% 10%, rgba(255,45,85,.06), transparent 64%),
+    radial-gradient(900px 650px at 50% 110%, rgba(52,199,89,.06), transparent 66%),
     linear-gradient(180deg, #f7f8fc, #eef2f8 55%, #f6f8fc);
   color: var(--text);
 }
@@ -35,9 +32,11 @@
   border: 1px solid rgba(255,255,255,.45);
   box-shadow: var(--shadow), var(--inner);
   border-radius: 26px;
+  color: var(--text);
+  text-shadow: 0 1px 0 rgba(255,255,255,.55);
 }
 
-/* Subtle liquid highlight (keep it LIGHT so it doesn’t become frosted) */
+/* Subtle liquid highlight */
 .glassGloss{
   position: relative;
   overflow: hidden;
@@ -47,13 +46,12 @@
   position:absolute;
   inset:0;
   background:
-    radial-gradient(700px 240px at 30% 18%, rgba(255,255,255,.35), transparent 66%),
-    linear-gradient(115deg, transparent 35%, rgba(255,255,255,.18) 46%, transparent 60%);
+    radial-gradient(700px 240px at 30% 18%, rgba(255,255,255,.32), transparent 66%),
+    linear-gradient(115deg, transparent 35%, rgba(255,255,255,.16) 46%, transparent 60%);
   pointer-events:none;
   opacity:.35;
 }
 
-/* If blur is supported, this becomes “real” glass */
 @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
   .glass{
     -webkit-backdrop-filter: blur(42px) saturate(1.55);
@@ -61,7 +59,7 @@
   }
 }
 
-/* Buttons should also be glass (not filled pills) */
+/* Buttons = glass, but force readable text */
 .glassBtn{
   width: 100%;
   padding: 18px 16px;
@@ -76,6 +74,7 @@
   transition: transform 120ms ease, filter 120ms ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  text-shadow: 0 1px 0 rgba(255,255,255,.55);
 }
 .glassBtn:active{ transform: scale(.985); filter: brightness(1.02); }
 
@@ -86,21 +85,26 @@
   font-weight: 900;
 }
 
-/* Primary stays “iOS blue”, but still glassy */
+/* Primary still iOS-blue but readable */
 .glassBtnPrimary{
-  background: rgba(10,132,255,.14);
+  background: rgba(10,132,255,.16);
   border-color: rgba(10,132,255,.22);
+  color: var(--text);
 }
 
-/* Danger + armed */
+/* Danger stays white text */
 .glassBtnDanger{
   background: rgba(239,68,68,.92);
   border-color: rgba(239,68,68,.92);
   color: white;
+  text-shadow: 0 1px 0 rgba(0,0,0,.18);
 }
+
+/* Armed */
 .glassBtnOn{
   background: rgba(239,68,68,.12);
   border-color: rgba(239,68,68,.18);
+  color: var(--text);
 }
 
 /* Panels */
@@ -109,9 +113,11 @@
   border-radius: 22px;
   border: 1px solid rgba(255,255,255,.45);
   background: rgba(255,255,255,var(--glass-a-2));
+  color: var(--text);
+  text-shadow: 0 1px 0 rgba(255,255,255,.55);
 }
 .glassRow{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
-.glassLabel{ font-size: 12px; color: var(--muted); }
+.glassLabel{ font-size: 12px; color: var(--muted); text-shadow: none; }
 .glassRange{ width: 100%; margin-top: 10px; accent-color: var(--accent); }
 
 /* Modal */
@@ -130,6 +136,8 @@
   border: 1px solid rgba(255,255,255,.45);
   background: rgba(255,255,255,.10);
   box-shadow: 0 22px 70px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.65);
+  color: var(--text);
+  text-shadow: 0 1px 0 rgba(255,255,255,.55);
 }
 @supports ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
   .modalCard{
